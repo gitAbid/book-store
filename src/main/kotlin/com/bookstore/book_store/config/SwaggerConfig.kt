@@ -16,6 +16,6 @@ class SwaggerConfig {
     fun api() = Docket(DocumentationType.SWAGGER_2)
             .select()
             .apis(RequestHandlerSelectors.basePackage("com.bookstore.book_store"))
-            .paths(regex("/.*"))
+            .paths(regex("/v1/.*"))
             .build()
 }
