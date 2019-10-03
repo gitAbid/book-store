@@ -11,7 +11,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/v1/authors")
-class AuthorController(@Autowired var authorRepo: AuthorRepository, @Autowired var authorService: AuthorService) {
+class AuthorController(@Autowired var authorService: AuthorService) {
     @GetMapping
     fun getAllAuthor(size: Optional<Int>, sortBy: Optional<String>, name: Optional<String>): ResponseEntity<List<Author>> {
         return authorService.getAllAuthors(name = name.orElse("_"), sortBy = sortBy.orElse("id"),
@@ -20,7 +20,7 @@ class AuthorController(@Autowired var authorRepo: AuthorRepository, @Autowired v
 
     @GetMapping("/{id}")
     fun getAuthor(@PathVariable id: Long): ResponseEntity<Author> {
-        return authorService.getAuthor(id = id)
+        return authorService.getAuthor(id)
     }
 
     @PostMapping
@@ -35,7 +35,6 @@ class AuthorController(@Autowired var authorRepo: AuthorRepository, @Autowired v
 
     @DeleteMapping("/{id}")
     fun deleteAuthor(@PathVariable id: Long): ResponseEntity<String> {
-        authorRepo.deleteById(id)
-        return ResponseEntity.ok("Delete Successful") // status code 200
+        return authorService.deleteAuthor(id)
     }
 }
