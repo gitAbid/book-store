@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/v1/books")
 class BooksController {
 
     @Autowired
@@ -37,9 +37,9 @@ class BooksController {
 
     }
 
-    @GetMapping("{book_id}")
-    fun getBook(@PathVariable book_id: Long): Book {
-        return bookRepo.getOne(book_id)
+    @GetMapping("/{id}")
+    fun getBook(@PathVariable id: Long): Book {
+        return bookRepo.getOne(id)
     }
 
     @PostMapping
@@ -48,14 +48,14 @@ class BooksController {
         return bookRepo.getOne(book.id)
     }
 
-    @PutMapping
-    fun updateBook(@RequestBody book: Book): Book {
+    @PutMapping("/{id}")
+    fun updateBook(@RequestBody book: Book, @PathVariable id: Long): Book {
         bookRepo.save(book)
-        return bookRepo.getOne(book.id)
+        return bookRepo.getOne(id)
     }
 
-    @DeleteMapping("{book_id}")
-    fun deleteBook(@PathVariable book_id: Long) {
-        bookRepo.deleteById(book_id)
+    @DeleteMapping("/{id}")
+    fun deleteBook(@PathVariable id: Long) {
+        bookRepo.deleteById(id)
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.lang.Exception
 
 @Service
 class AuthorServiceImp(@Autowired var authorRepo: AuthorRepository) : AuthorService {
@@ -24,12 +25,15 @@ class AuthorServiceImp(@Autowired var authorRepo: AuthorRepository) : AuthorServ
 
     override
     fun updateAuthor(id: Long, author: Author): ResponseEntity<Author> {
-        if (authorRepo.getOne(id) != null) {
-            authorRepo.save(author)
-            return ResponseEntity(authorRepo.getOne(id), HttpStatus.OK) // status code 201
-        } else {
-            return ResponseEntity(HttpStatus.BAD_REQUEST) // status code 201
+        try {
+            authorRepo.getOne(id)?.let {
+                authorRepo.save(author)
+                return ResponseEntity(it, HttpStatus.OK) // status code 201
+            }
+        } catch (e: Exception){
+            return ResponseEntity(HttpStatus.BAD_REQUEST) // status code 404
         }
+
     }
 
     override
