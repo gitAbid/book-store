@@ -10,5 +10,3 @@ class Author(
         val name: String,
         @ManyToMany
         val books: Set<Book>)
-// find mapping
-

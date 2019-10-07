@@ -2,50 +2,53 @@ package com.bookstore.book_store.controller
 
 import com.bookstore.book_store.model.Author
 import com.bookstore.book_store.service.AuthorService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.util.UriComponentsBuilder
 import java.util.*
 
 
 @RestController
 @RequestMapping("/v1/authors")
-@Api(value = "Authors", description = "Authors api allows get all authors, get single author, update author, delete authors")
-class AuthorController(@Autowired var authorService: AuthorService) {
+class AuthorController(@Autowired var authorService: AuthorService) : DocumentationInterface {
+
     @GetMapping
-    @ApiOperation(value = "Get all authors. This api also allows sorting[sortBy], list [size] and searching my [name]",
-                    response = List::class, protocols = "GET")
+    override
     fun getAllAuthor(size: Optional<Int>, sortBy: Optional<String>, name: Optional<String>): ResponseEntity<List<Author>> {
-        return authorService.getAllAuthors(name = name.orElse("_"), sortBy = sortBy.orElse("id"),
+        val finalAuthor = authorService.getAllAuthors(name = name.orElse("_"), sortBy = sortBy.orElse("id"),
                 limit = size.orElse(Int.MAX_VALUE))
+        return ResponseEntity(finalAuthor, HttpStatus.OK)
+
     }
 
-    @ApiOperation(value = "Get single author by id", protocols = "GET")
     @GetMapping("/{id}")
-    fun getAuthor(@PathVariable id: Long): ResponseEntity<Author> {
-        return authorService.getAuthor(id)
+    override fun getAuthor(@PathVariable id: Long): ResponseEntity<Author> {
+        val finalAuthor = authorService.getAuthor(id)
+        return if (finalAuthor == null) ResponseEntity(HttpStatus.NOT_FOUND) else ResponseEntity(finalAuthor, HttpStatus.OK)
+
     }
 
-    @ApiOperation(value = "Add new author", protocols = "POST")
     @PostMapping
-    fun addAuthor(@RequestBody author: Author): ResponseEntity<Author> {
-        return authorService.addAuthor(author)
+    override fun addAuthor(@RequestBody author: Author): ResponseEntity<Author> {
+        val finalAuthor = authorService.addAuthor(author)
+        return if (finalAuthor == null) ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR) else ResponseEntity(finalAuthor, HttpStatus.CREATED)
     }
 
-    @ApiOperation(value = "Update author by id",
-            response = List::class, protocols = "PUT")
     @PutMapping("/{id}")
-    fun updateAuthor(@PathVariable id: Long, @RequestBody author: Author): ResponseEntity<Author> {
-        return authorService.updateAuthor(id, author)
+    override fun updateAuthor(@PathVariable id: Long, @RequestBody author: Author): ResponseEntity<Author> {
+        val finalAuthor = authorService.updateAuthor(id, author)
+        return if (finalAuthor == null) ResponseEntity(HttpStatus.NOT_FOUND) else ResponseEntity(finalAuthor, HttpStatus.OK)
     }
 
-    @ApiOperation(value = "Delete author by id",protocols = "DELETE")
+
     @DeleteMapping("/{id}")
-    fun deleteAuthor(@PathVariable id: Long): ResponseEntity<String> {
-        return authorService.deleteAuthor(id)
+    override fun deleteAuthor(@PathVariable id: Long): ResponseEntity<String> {
+        var author: Author? = null
+        if (authorService.getAuthor(id) != null) {
+            author = authorService.deleteAuthor(id)
+        }
+        return if (author == null) ResponseEntity(HttpStatus.OK) else ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+
     }
 }
