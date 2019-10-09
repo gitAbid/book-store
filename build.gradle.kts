@@ -24,8 +24,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
 	//swagger dependency
-	compile("io.springfox:springfox-swagger2:2.7.0")
-	compile("io.springfox:springfox-swagger-ui:2.7.0")
+	compile("io.springfox:springfox-swagger2:2.9.2")
+	compile("io.springfox:springfox-swagger-ui:2.9.2")
 
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("mysql:mysql-connector-java")
