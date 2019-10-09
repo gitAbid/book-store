@@ -1,5 +1,6 @@
 package com.bookstore.book_store.controller
 
+import com.bookstore.book_store.annotation.Doc
 import com.bookstore.book_store.model.Author
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -11,8 +12,9 @@ import java.util.*
 @Api(value = "Authors", description = "Authors api allows get all authors, get single author, update author, delete authors")
 interface DocumentationInterface {
 
-    @ApiOperation(value = "Get all authors. This api also allows sorting[sortBy], list [size] and searching my [name]",
+    /*@ApiOperation(value = "Get all authors. This api also allows sorting[sortBy], list [size] and searching my [name]",
             response = List::class, protocols = "GET")
+    */
     fun getAllAuthor(size: Optional<Int>, sortBy: Optional<String>, name: Optional<String>): ResponseEntity<List<Author>>
 
     @ApiOperation(value = "Get single author by id", protocols = "GET")

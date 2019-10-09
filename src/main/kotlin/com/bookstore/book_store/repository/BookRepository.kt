@@ -1,6 +1,5 @@
 package com.bookstore.book_store.repository
 
-import com.bookstore.book_store.model.Author
 import com.bookstore.book_store.model.Book
 import org.springframework.data.jpa.repository.JpaRepository
 
